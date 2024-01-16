@@ -17,12 +17,17 @@ const SupportAgent = () => {
 
     axios.post("http://localhost:3000/api/support-agents",agentData)
     .then((response) => {
-      console.log(response);
+      console.log(response)
+      alert("Successfully created support Agent !")
+    })
+    .catch((error)=>{
+      console.log(error)
+      alert("Something went wrong! Please try again.")
     })
   };
 
   return (
-    <div>
+    <div className="px-4 py-4">
       <Form onSubmit={(e) => handleSubmit(e)}>
         <Form.Group className="mb-3" controlId="Name">
           <Form.Label>Name</Form.Label>
@@ -45,7 +50,7 @@ const SupportAgent = () => {
         </Form.Group>
         
         <Button variant="primary" type="submit">
-          Submit
+          Create Support Agent
         </Button>
       </Form>
     </div>
