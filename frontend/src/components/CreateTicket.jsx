@@ -3,9 +3,14 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 const CreateTicket = () => {
+  
+  const handleSubmit = (e) => {
+    console.log(e);
+  };
+
   return (
     <div>
-      <Form>
+      <Form onSubmit={(e) => handleSubmit(e)}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Topic</Form.Label>
           <Form.Control type="text" placeholder="Enter topic" />
