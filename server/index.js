@@ -1,11 +1,13 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
 const PORT = 3000;
 
 const cors = require("cors");
+const exp = require("constants");
 const corsOptions = {
   origin: "*",
   credentials: true,
@@ -42,7 +44,8 @@ app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
+app.get('/api/findAgents', (req, res) => {
+  console.log("data")
   Agent.find({})
     .then((data) => {
       console.log(data);
@@ -167,6 +170,11 @@ app.get("/api/getAgents", (req, res) => {
   Agent.find({})
     .then((result) => res.send(result))
     .catch((err) => res.send(err));
+});
+
+app.use(express.static(path.join(__dirname, "../frontend", "dist")));
+app.get('*',(req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
 });
 
 app.listen(PORT, (error) => {

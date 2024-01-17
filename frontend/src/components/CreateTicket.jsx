@@ -16,7 +16,7 @@ const CreateTicket = () => {
       status: e.target.status.value
     }
 
-    axios.post("http://localhost:3000/api/support-tickets",ticketData)
+    axios.post("/api/support-tickets",ticketData)
     .then((response) => {
       console.log(response)
       alert("Successfully created Ticket!")
