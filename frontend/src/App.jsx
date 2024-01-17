@@ -13,8 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/agent" element={<SupportAgent />} />
-          <Route path="/ticket" element={<CreateTicket />} />
-          <Route path="/*" element={<SupportAgent />} />
+          <Route path="/createTicket" element={<CreateTicket />} />
         </Routes>
       </BrowserRouter>
     </>

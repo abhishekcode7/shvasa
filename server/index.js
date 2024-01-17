@@ -12,10 +12,7 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 
-mongoose.connect(process.env.MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGODB_URL);
 
 const agentSchema = new mongoose.Schema({
   name: String,
@@ -73,9 +70,9 @@ app.post("/api/support-agents", (req, res) => {
 });
 
 const ticketStatus = {
-  New: "New",
-  Assigned: "Assigned",
-  Resolved: "Resolved",
+  New: "new",
+  Assigned: "assigned",
+  Resolved: "resolved",
 };
 
 var currentAgentIndex = 0;
@@ -86,7 +83,7 @@ app.post("/api/support-tickets", (req, res) => {
     while (1) {
       if (agents[currentAgentIndex].active == false) {
         currentAgentIndex = (currentAgentIndex + 1) % totalAgents;
-      }else break
+      } else break;
     }
 
     let ticket = new TicketModel({
@@ -110,6 +107,66 @@ app.post("/api/support-tickets", (req, res) => {
       (err) => res.send(err)
     );
   });
+});
+
+app.get("/api/support-tickets", (req, res) => {
+  TicketModel.find()
+    .then((tickets) => {
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = parseInt(req.query.page_size) || 10;
+      const status = req.query.status || null;
+      const assignedTo = req.query.assigned_to || null;
+      const severity = req.query.severity || null;
+      const type = req.query.type || null;
+      const sortResolvedOn = req.query.sort_resolved_on || false;
+      const sortDateCreated = req.query.sort_date_created || false;
+
+      let result = tickets.filter((item) => {
+        var ans = true;
+        if (status != null && item.status != status) ans = false;
+        if (assignedTo != null && item.assignedTo != assignedTo) ans = false;
+        if (severity != null && item.severity != severity) ans = false;
+        if (type != null && item.type != type) ans = false;
+        return ans;
+      });
+
+      if (sortResolvedOn == true) {
+        result.sort((a, b) => {
+          return new Date(b.resolvedOn) - new Date(a.resolvedOn);
+        });
+      } else if (sortDateCreated == true) {
+        result.sort((a, b) => {
+          return new Date(b.dateCreated) - new Date(a.dateCreated);
+        });
+      }
+
+      var startIndex = (page - 1) * pageSize;
+      var endIndex = startIndex + pageSize;
+
+      startIndex = Math.min(startIndex, result.length);
+      endIndex = Math.min(endIndex, result.length);
+
+      res.send(result.slice(startIndex, endIndex));
+    })
+    .catch((err) => res.send(err));
+});
+
+app.get("/api/clearTickets", (req, res) => {
+  TicketModel.deleteMany({})
+    .then((result) => res.send(result))
+    .catch((err) => res.send(err));
+});
+
+app.get("/api/clearAgents", (req, res) => {
+  Agent.deleteMany({})
+    .then((result) => res.send(result))
+    .catch((err) => res.send(err));
+});
+
+app.get("/api/getAgents", (req, res) => {
+  Agent.find({})
+    .then((result) => res.send(result))
+    .catch((err) => res.send(err));
 });
 
 app.listen(PORT, (error) => {

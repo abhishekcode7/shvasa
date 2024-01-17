@@ -57,9 +57,9 @@ const CreateTicket = () => {
         <Form.Group className="mb-3" controlId="type">
           <Form.Label>Type</Form.Label>
           <Form.Select aria-label="Default select example" required>
-            <option value="A">Type A</option>
-            <option value="B">Type B</option>
-            <option value="C">Type C</option>
+            <option value="a">Type A</option>
+            <option value="b">Type B</option>
+            <option value="c">Type C</option>
           </Form.Select>
         </Form.Group>
 
