@@ -28,6 +28,19 @@ const agentSchema = new mongoose.Schema({
 
 const Agent = mongoose.model("Agent", agentSchema);
 
+const ticketSchema = new mongoose.Schema({
+  topic: String,
+  description: String,
+  dateCreated: Date,
+  severity: String,
+  type: String,
+  assignedTo: String,
+  assignedToId: String,
+  status: String,
+  resolvedOn: Date,
+});
+
+const TicketModel = mongoose.model("TicketModel", ticketSchema);
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -57,6 +70,46 @@ app.post("/api/support-agents", (req, res) => {
     },
     (err) => res.send(err)
   );
+});
+
+const ticketStatus = {
+  New: "New",
+  Assigned: "Assigned",
+  Resolved: "Resolved",
+};
+
+var currentAgentIndex = 0;
+app.post("/api/support-tickets", (req, res) => {
+  Agent.find().then((agents) => {
+    let totalAgents = agents.length;
+
+    while (1) {
+      if (agents[currentAgentIndex].active == false) {
+        currentAgentIndex = (currentAgentIndex + 1) % totalAgents;
+      }else break
+    }
+
+    let ticket = new TicketModel({
+      topic: req.body.topic,
+      description: req.body.description,
+      dateCreated: req.body.dateCreated,
+      severity: req.body.severity,
+      type: req.body.type,
+      assignedTo: agents[currentAgentIndex].name,
+      assignedToId: agents[currentAgentIndex]._id,
+      status: ticketStatus.Assigned,
+      resolvedOn: null,
+    });
+
+    currentAgentIndex = (currentAgentIndex + 1) % totalAgents;
+
+    ticket.save().then(
+      (savedTicketData) => {
+        res.send(savedTicketData);
+      },
+      (err) => res.send(err)
+    );
+  });
 });
 
 app.listen(PORT, (error) => {
