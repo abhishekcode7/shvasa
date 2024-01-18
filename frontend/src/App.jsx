@@ -9,6 +9,7 @@ function App() {
       <NavigationBar />
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<SupportAgent />} />
           <Route path="/agent" exact element={<SupportAgent />} />
           <Route path="/createTicket" exact element={<CreateTicket />} />
         </Routes>
