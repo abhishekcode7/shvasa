@@ -6,7 +6,7 @@
   "proxy": "http://localhost:3000",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cd ../server && node index.js",
+    "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -30,3 +30,5 @@
     "vite": "^5.0.8"
   }
 }
+
+// && cd ../server && node index.js
