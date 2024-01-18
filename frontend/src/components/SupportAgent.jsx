@@ -15,7 +15,7 @@ const SupportAgent = () => {
       desc: e.target.Description.value
     }
 
-    axios.post("/api/support-agents",agentData)
+    axios.post("https://shvasa.vercel.app/api/support-agents",agentData)
     .then((response) => {
       console.log(response)
       alert("Successfully created support Agent !")
