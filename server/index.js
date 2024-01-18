@@ -172,9 +172,9 @@ app.get("/api/getAgents", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-app.use(express.static(path.join(__dirname, "../frontend", "dist")));
-app.get('*',(req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+
+app.get('/',(req, res) => {
+  res.send("Hello")
 });
 
 app.listen(PORT, (error) => {
